@@ -9,7 +9,6 @@ namespace ServiceManager {
 		public string[] DependentServices;
 		public string DisplayName;
 		public string MachineName;
-		public string ServiceHandle;
 		public string ServiceName;
 		public string[] ServicesDependedOn;
 		public string ServiceType;

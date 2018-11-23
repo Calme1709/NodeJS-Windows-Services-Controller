@@ -11,6 +11,13 @@ module.exports = function(ServiceName = ""){
 		throw "Service Manager is only supported on Microsoft Windows";
 	}
 
+	this.changeStartupType = (StartupType)=>{
+		ChildProcess.exec(FormatArgs(ServiceManagerBinary, "ChangeStartupType", this.ServiceName, StartupType), {}, (err, stdout, stderr)=>{
+			if(err) throw err;
+			if(stderr) throw stderr;
+		});
+	};
+
 	this.getInfo = ()=>{
 		let Result = String.fromCharCode.apply(null, ChildProcess.execSync(FormatArgs(ServiceManagerBinary, "GetInfo", this.ServiceName)));
 		Result = Result.replace("\"true\"", "true").replace("\"false\"", "false");
@@ -31,12 +38,9 @@ module.exports = function(ServiceName = ""){
 		});
 	};
 
-	this.changeStartupType = (StartupType)=>{
-		ChildProcess.exec(FormatArgs(ServiceManagerBinary, "ChangeStartupType", this.ServiceName, StartupType), {}, (err, stdout, stderr)=>{
-			if(err) throw err;
-			if(stderr) throw stderr;
-		});
-	};
+	this.waitForStatus = (desiredStatus)=>{
+		ChildProcess.execSync(ServiceManagerBinary + " WaitForStatus " + this.ServiceName + " " + desiredStatus);
+	}
 
 	this.waitForStatusCallback = (desiredStatus, Callback)=>{
 		ChildProcess.exec(FormatArgs(ServiceManagerBinary, "WaitForStatus", this.ServiceName, desiredStatus), {}, (err, stdout, stderr)=>{
@@ -44,9 +48,5 @@ module.exports = function(ServiceName = ""){
 			if(stderr) throw stderr;
 			Callback();
 		});
-	}
-
-	this.waitForStatus = (desiredStatus)=>{
-		ChildProcess.execSync(ServiceManagerBinary + " WaitForStatus " + this.ServiceName + " " + desiredStatus);
 	}
 };
