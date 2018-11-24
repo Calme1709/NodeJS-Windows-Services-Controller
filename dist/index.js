@@ -13,7 +13,7 @@ module.exports = function(serviceName = ""){
 	this.ServiceName = serviceName;
 
 	this.changeStartupType = (desiredStartupType)=>{
-		if(["auto", "boot", "disabled", "demand", "system"].indexOf(StartupType.toLowerCase()) == - 1)
+		if(["auto", "boot", "disabled", "demand", "system"].indexOf(desiredStartupType.toLowerCase()) == - 1)
 			throw "Invalid Startup Type";
 
 		ChildProcess.exec(FormatArgs("\"" + __dirname + "\\binaries\\SetStartupType.bat\"", this.ServiceName, desiredStartupType.toLowerCase()), {}, (err, stdout, stderr)=>{
