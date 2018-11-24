@@ -10,20 +10,8 @@ namespace ServiceManager {
 				throw new Exception("Command or Service Name was not set");
 
 			ServiceController Sc = new ServiceController(args[1]);
+
 			switch (args[0]) {
-				case "ChangeStartupType":
-					if (Array.IndexOf(new string[] { "Automatic", "Boot", "Disabled", "Manual", "System" }, args[2]) == -1)
-						throw new Exception("Start type is not valid");
-
-					Sc.ChangeStartMode(new Dictionary<string, ServiceStartMode>() {
-						{ "Automatic", ServiceStartMode.Automatic },
-						{ "Boot", ServiceStartMode.Boot },
-						{ "Disabled", ServiceStartMode.Disabled },
-						{ "Manual", ServiceStartMode.Manual },
-						{ "System", ServiceStartMode.System }
-					}[args[2]]);
-				break;
-
 				case "Continue":
 					Sc.Continue();
 				break;

@@ -24,7 +24,7 @@ namespace ServiceManager {
 			MachineName = Sc.MachineName;
 			ServiceName = Sc.ServiceName;
 			ServicesDependedOn = Sc.ServicesDependedOn.Select(sc => sc.DisplayName).ToArray();
-			ServiceType = Sc.ServiceType.ToString();
+			ServiceType = Sc.ServiceType.ToString().Replace("Automatic", "Auto").Replace("Manual", "Demand");
 			StartType = Sc.StartType.ToString();
 			Status = Sc.Status.ToString();
 		}
