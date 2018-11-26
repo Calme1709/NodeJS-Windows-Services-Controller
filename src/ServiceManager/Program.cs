@@ -13,26 +13,36 @@ namespace ServiceManager {
 
 			switch (args[0]) {
 				case "Continue":
-					Sc.Continue();
-				break;
+					if (Sc.CanPauseAndContinue && Sc.Status == ServiceControllerStatus.Paused) {
+						Sc.Continue();
+						Sc.WaitForStatus(ServiceControllerStatus.Running);
+					}
+				return;
 
 				case "GetInfo":
 					Console.WriteLine(JsonConvert.SerializeObject(new ServiceControllerInfo(Sc)));
-				break;
+				return;
 
 				case "Pause":
-					Sc.Pause();
-				break;
+					if (Sc.CanPauseAndContinue && Sc.Status == ServiceControllerStatus.Running) {
+						Sc.Pause();
+						Sc.WaitForStatus(ServiceControllerStatus.Paused);
+					}
+				return;
 
 				case "Start":
-					if (Sc.Status != ServiceControllerStatus.Running)
+					if (Sc.Status == ServiceControllerStatus.Stopped)
 						Sc.Start();
-				break;
+
+					Sc.WaitForStatus(ServiceControllerStatus.Running);
+				return;
 
 				case "Stop":
-					if(Sc.Status != ServiceControllerStatus.Stopped)
+					if (Sc.CanStop && Sc.Status == ServiceControllerStatus.Running)
 						Sc.Stop();
-				break;
+
+					Sc.WaitForStatus(ServiceControllerStatus.Stopped);
+				return;
 
 				case "WaitForStatus":
 					if(Array.IndexOf(new string[] { "ContinuePending", "Paused", "PausePending", "Running", "StartPending", "Stopped", "StopPending" }, args[2]) == -1)
@@ -47,7 +57,7 @@ namespace ServiceManager {
 						{ "Stopped", ServiceControllerStatus.Stopped },
 						{ "StopPending", ServiceControllerStatus.StopPending }
 					}[args[2]]);
-				break;
+					return;
 
 				default:
 					throw new Exception("Command is invalid");

@@ -1,10 +1,6 @@
 const ChildProcess = require("child_process");
 const ServiceManagerBinary = "\"" + __dirname + "\\binaries\\ServiceManager.exe\"";
 
-function FormatArgs(...Args){
-	return Args.join(" ");
-}
-
 module.exports = function(serviceName = ""){
 	if(require("os").platform().indexOf("win32") == -1){
 		throw "Service Manager is only supported on Microsoft Windows";
@@ -12,65 +8,51 @@ module.exports = function(serviceName = ""){
 
 	this.ServiceName = serviceName;
 
+	this.execute = (Command, JsonEncoded = false)=>{
+		return new Promise((resolve, reject)=>{
+			ChildProcess.exec(Command, {}, (err, stdout, stderr)=>{
+				if(err)
+					reject(err);
+
+				if(stderr)
+					reject(stderr);
+
+				resolve(JsonEncoded ? JSON.parse(stdout) : stdout);
+			});
+		});
+	};
+
 	this.changeStartupType = (desiredStartupType)=>{
 		if(["auto", "boot", "disabled", "demand", "system"].indexOf(desiredStartupType.toLowerCase()) == - 1)
-			throw "Invalid Startup Type";
+			console.log("Invalid Startup Type");
 
-		ChildProcess.exec(FormatArgs("\"" + __dirname + "\\binaries\\SetStartupType.bat\"", this.ServiceName, desiredStartupType.toLowerCase()), {}, (err, stdout, stderr)=>{
-			if(err) throw err;
-			if(stderr) throw stderr;
-		});
+		return this.execute(["\"" + __dirname + "\\binaries\\SetStartupType.bat\"", this.ServiceName, desiredStartupType.toLowerCase()].join(" "));
 	};
 
 	this.continue = ()=>{
-		ChildProcess.exec(FormatArgs(ServiceManagerBinary, "Continue", this.ServiceName), {}, (err, stdout, stderr)=>{
-			if(err) throw err;
-			if(stderr) throw stderr;
-		});
-	}
+		return this.execute([ServiceManagerBinary, "Continue", this.ServiceName].join(" "));
+	};
 
 	this.getInfo = ()=>{
-		let Result = String.fromCharCode.apply(null, ChildProcess.execSync(FormatArgs(ServiceManagerBinary, "GetInfo", this.ServiceName)));
-		Result = Result.replace("\"true\"", "true").replace("\"false\"", "false");
-		return JSON.parse(Result);
+		return this.execute([ServiceManagerBinary, "GetInfo", this.ServiceName].join(" "), true);
 	};
 
 	this.pause = ()=>{
-		ChildProcess.exec(FormatArgs(ServiceManagerBinary, "Pause", this.ServiceName), {}, (err, stdout, stderr)=>{
-			if(err) throw err;
-			if(stderr) throw stderr;
-		});
-	}
+		return this.execute([ServiceManagerBinary, "Pause", this.ServiceName].join(" "));
+	};
 
 	this.start = ()=>{
-		ChildProcess.exec(FormatArgs(ServiceManagerBinary, "Start", this.ServiceName), {}, (err, stdout, stderr)=>{
-			if(err) throw err;
-			if(stderr) throw stderr;
-		});
+		return this.execute([ServiceManagerBinary, "Start", this.ServiceName].join(" "));
 	};
 
 	this.stop = ()=>{
-		ChildProcess.exec(FormatArgs(ServiceManagerBinary, "Stop", this.ServiceName), {}, (err, stdout, stderr)=>{
-			if(err) throw err;
-			if(stderr) throw stderr;
-		});
+		return this.execute([ServiceManagerBinary, "Stop", this.ServiceName].join(" "));
 	};
 
-	this.waitForStatus = (desiredStatus)=>{
+	this.waitForStatus = (desiredStatus, Callback)=>{
 		if(["ContinuePending", "Paused", "PausePending", "Running", "StartPending", "Stopped", "StopPending"].indexOf(desiredStatus) == -1)
 			throw "Invalid Status";
-
-		ChildProcess.execSync(ServiceManagerBinary + " WaitForStatus " + this.ServiceName + " " + desiredStatus);
-	}
-
-	this.waitForStatusCallback = (desiredStatus, Callback)=>{
-		if(["ContinuePending", "Paused", "PausePending", "Running", "StartPending", "Stopped", "StopPending"].indexOf(desiredStatus) == -1)
-			throw "Invalid Status";
-
-		ChildProcess.exec(FormatArgs(ServiceManagerBinary, "WaitForStatus", this.ServiceName, desiredStatus), {}, (err, stdout, stderr)=>{
-			if(err) throw err;
-			if(stderr) throw stderr;
-			Callback();
-		});
-	}
+		
+		return this.execute([ServiceManagerBinary, "WaitForStatus", this.ServiceName, desiredStatus].join(" "));
+	};
 };

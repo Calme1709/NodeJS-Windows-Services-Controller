@@ -19,10 +19,11 @@ const Superfetch = new ServiceController("Superfetch");
 ```
 
 You can then use that instance for any of the following methods;
+NOTE: All methods return a promise and any that return data will resolve with that data, and any that return no data will resolve when the operation is finished.
 
 ### ServiceController.changeStartupType(desiredStartupType)
 ```javscript
-Superfetch.changeStartupType("Automatic");
+Superfetch.changeStartupType("Auto");
 ```
 Changes the startup type of the service to the desiredStartupType which can be any of the following;
 * Auto
@@ -31,6 +32,12 @@ Changes the startup type of the service to the desiredStartupType which can be a
 * Demand
 * System
 
+&nbsp;
+### ServiceController.continue()
+```javscript
+Superfetch.continue();
+```
+Continues the service if it is paused
 &nbsp;
 ### ServiceController.getInfo()
 ```javascript
@@ -76,6 +83,13 @@ Returns an object detailing the information surrounding the service with the bel
   Indicates whether the service is running, stopped, or paused, or whether a start, stop, pause, or continue command is pending.
 
 &nbsp;
+### ServiceController.pause()
+```javscript
+Superfetch.pause(;
+```
+Pauses the service if it is running
+
+&nbsp;
 ### ServiceController.start()
 ```javascript
 Superfetch.start();
@@ -95,23 +109,7 @@ Stops the service if it is running
 ```javascript
 Superfetch.waitForStatus("Running");
 ```
-Blocks the process until the desired status is reached, the desired status can be any of the following:
-* ContinuePending
-* Paused
-* PausePending
-* Running
-* StartPending
-* Stopped
-* StopPending
-
-&nbsp;
-### ServiceController.waitForStatusCallback(desiredStatus, callback)
-```javascript
-Superfetch.waitForStatusCallback("Running", ()=>{
-    console.log("The service is running");
-});
-```
-Wait until the desired status is reached and then execute the callback, the desired status can be any of the following
+Returns a promise which resolves when the desired status that was passed to the method is reached. The desired status can be any of the following;
 * ContinuePending
 * Paused
 * PausePending

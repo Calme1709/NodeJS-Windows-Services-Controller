@@ -1,6 +1,6 @@
 {
   "name": "nodejs-windows-service-controller",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "A module for NodeJS which allows for interaction with windows services",
   "main": "index.js",
   "scripts": {
