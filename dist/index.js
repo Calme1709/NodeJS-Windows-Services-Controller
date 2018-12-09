@@ -7,7 +7,7 @@ module.exports = class ServiceManager{
 			throw "Service Manager is only supported on Microsoft Windows";
 		}
 
-		this.ServiceName = serviceName;
+		this.ServiceName = ServiceName;
 	}
 
 	execute(Command, JsonEncoded = false){
