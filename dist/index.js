@@ -13,11 +13,15 @@ module.exports = class ServiceManager{
 	execute(Command, JsonEncoded = false){
 		return new Promise((resolve, reject)=>{
 			ChildProcess.exec(Command, {}, (err, stdout, stderr)=>{
-				if(err)
+				if(err) {
 					reject(err);
-
-				if(stderr)
+					return;
+				}
+					
+				if(stderr) {
 					reject(stderr);
+					return;
+				}
 
 				resolve(JsonEncoded ? JSON.parse(stdout) : stdout);
 			});
