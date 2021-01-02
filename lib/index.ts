@@ -1,0 +1,34 @@
+export { default as default } from "../addon/addon";
+
+export enum ServiceType {
+	KERNEL_DRIVER = 0x1,
+	FILE_SYSTEM_DRIVER =0x2,
+	WIN32_OWN_PROCESS = 0x10,
+	WIN32_SHARE_PROCESS = 0x20,
+	USER_OWN_PROCESS = 0x50,
+	USER_SHARE_PROCESS = 0x60,
+	INTERACTIVE_PROCESS = 0x100
+}
+
+export enum ServiceState {
+	STOPPED = 0x1,
+	START_PENDING = 0x2,
+	STOP_PENDING = 0x3,
+	RUNNING = 0x4,
+	CONTINUE_PENDING = 0x5,
+	PAUSE_PENDING = 0x6,
+	PAUSED = 0x7,
+}
+
+export enum ServiceControls {
+	NETBINDCHANGE = 0x10,
+	PARAMCHANGE = 0x8,
+	PAUSE_CONTINUE = 0x2,
+	PRESHUTDOWN = 0x100,
+	ACCEPT_SHUTDOWN = 0x4,
+	ACCEPT_STOP = 0x1,
+	HARDWAREPROFILECHANGE = 0x20,
+	POWEREVENT = 0x40,
+	SESSIONCHANGE = 0x80,
+
+}
