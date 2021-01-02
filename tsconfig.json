@@ -23,9 +23,9 @@
 		"noFallthroughCasesInSwitch": true,
 		"esModuleInterop": true,
         "watch": false,
-        "resolveJsonModule": true,
-	},
-	"include": [
-		"./lib"
-	]
+		"resolveJsonModule": true,
+		"outDir": "./dist",
+		"rootDir": "./lib",
+		"declaration": true
+	}
 }

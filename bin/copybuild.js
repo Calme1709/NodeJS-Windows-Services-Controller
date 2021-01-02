@@ -1,7 +1,12 @@
 const fs = require("fs");
 const path = require("path");
 
-const src = path.resolve(__dirname + "/../build/Release/addon.node");
-const dest = path.resolve(__dirname + "/../dist/addon.node");
+const addonSrc = path.resolve(__dirname + "/../build/Release/addon.node");
+const addonDest = path.resolve(__dirname + "/../dist/addon.node");
 
-fs.copyFileSync(src, dest);
+fs.copyFileSync(addonSrc, addonDest);
+
+const typingsSrc = path.resolve(__dirname + "/../lib/addon.d.ts");
+const typingsDest = path.resolve(__dirname + "/../dist/addon.d.ts");
+
+fs.copyFileSync(typingsSrc, typingsDest);

@@ -1,4 +1,4 @@
-export { default as default } from "../addon/addon";
+export { default as default } from "./addon";
 
 export enum ServiceType {
 	KERNEL_DRIVER = 0x1,

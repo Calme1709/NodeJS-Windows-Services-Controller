@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node-gyp configure && node-gyp build && node bin/copybuild.js"
+    "build": "node-gyp configure && node-gyp build && tsc && node bin/copybuild.js"
   },
   "repository": {
     "type": "git",

@@ -1,4 +1,4 @@
-dist/addon.node
 build/
 node_modules/
 .vscode/
+dist/
